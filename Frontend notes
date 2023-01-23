@@ -1,0 +1,14 @@
+1. should always pass all values given in the api/v1/campaign/create, eg. tones should be empty array if not required and description should be empty string and not null
+2. All operations are being done one by one for each social media. eg. generate/translate
+3. campaign process
+ i. call init campaign to check and create new campaign, gives a campaign id on successful creation
+ ii. call getCampaignId with uid and name to get _d for further operations
+ iii. call create campaign with this _id always
+ iv. save campaign using _id
+4. on translation create whole new campaign with existing campaign name+[lang-newLanguage] as appended text 
+5. OR we are not supporting to save translated campaign in DB so you can just dwnload the translated campaign, coz storing in DB does not make any sense and may different language storing may cause errors/misdata
+6. to log the price data
+i. get payments collection from get_payment_logs
+ii. show, if clicked for more info 
+iii. use get_subscription method provide subscription and get details
+7. remove all error messages in production link:https://auth0.com/blog/forbidden-unauthorized-http-status-codes/

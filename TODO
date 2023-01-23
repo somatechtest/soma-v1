@@ -1,0 +1,25 @@
+Add currency for native/local setup ✅ (check in production once, working only with test emails 'test+location_IN@example.com')
+Create products for annual and update in webhook 
+Handle case when pro to elite plan switched and how you handle or manage words for both plans
+check for all sort of card payment failures
+check for setting up payment methods from dashboard itself
+emails on complete, failed reminders ✅ (will only be sent in live mode) set in dashboard from : https://stripe.com/docs/invoicing/send-email
+check update of subscription
+check cancel of subscription
+payment_status: "unpaid", {added to stripe.js thinking that when session was opened the state should be unpaid}
+test all scenarios from https://stripe.com/docs/testing
+Remove firebasecreds.json befre deployment
+
+
+TODO PENDING:
+1. Update subscription from webhook
+2. Upgrade product to buy extra pills
+3. whenever a request comes first pass to plan middleware and check if he is eligible to proceed
+4. after each succesful api call update the tokens left from subscriptions model of a user using his uid
+5. check casing for campaign creation and routes
+
+
+
+
+STRIPE
+1. use subscription id and along with that a variable status: get it from subscription object itself
