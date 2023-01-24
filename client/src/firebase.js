@@ -7,13 +7,13 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 const firebaseConfig = {
-    apiKey: "AIzaSyBvd0w6iKoET8r4_BHnnetyvS3uZ7Cb1Uo",
-    authDomain: "athread-75532.firebaseapp.com",
-    projectId: "athread-75532",
-    storageBucket: "athread-75532.appspot.com",
-    messagingSenderId: "828724944675",
-    appId: "1:828724944675:web:69bef42e4d2ece21237696",
-    measurementId: "G-7QWC8K0G9Q"
+    apiKey: process.env.REACT_APP_FIREBASE_apiKey,
+    authDomain: process.env.REACT_APP_FIREBASE_authDomain,
+    projectId: process.env.REACT_APP_FIREBASE_projectId,
+    storageBucket: process.env.REACT_APP_FIREBASE_storageBucket,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_messagingSenderId,
+    appId: process.env.REACT_APP_FIREBASE_appId,
+    measurementId: process.env.REACT_APP_FIREBASE_measurementId
   };
   
   // Initialize Firebase
