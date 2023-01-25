@@ -40,7 +40,7 @@ const translateCampaign = async (req, res) =>{
         let resp;
         try{
             resp = await openai.createCompletion({
-                model: CONSTANTS.MODEL_DAVINCI,
+                model: CONSTANTS.MODEL_CURIE,
                 prompt: prompt,
                 temperature: 0.3,
                 max_tokens: req.output_tokens_length,

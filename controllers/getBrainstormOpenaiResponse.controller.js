@@ -3,26 +3,17 @@ const CONSTANTS = require("../utils/utils")
 const openai = require("../connect/openai");
 const { updateTokensUsed } = require("./campaignHelper.controller");
 const getBrainstormOpenaiResponse = async function (req, res) {
-    let resp;
+    
     try{
-        resp = await openai.openai.createCompletion({
+        let resp = await openai.openai.createCompletion({
             model: CONSTANTS.MODEL_CURIE,
             // prompt: prompt,
             prompt: req.prompt,
             max_tokens: req.output_tokens_length,
             temperature: 0,
         });
-    }catch(error){
-        res.json({
-            errors:[
-                {
-                    msg:error.message
-                }
-            ],
-            data:null
-        })
-    }
-    let temp = resp.data
+
+        let temp = resp.data
     
             //updating tokens from "subscription" document
             await updateTokensUsed(req,res,temp)
@@ -47,6 +38,17 @@ const getBrainstormOpenaiResponse = async function (req, res) {
             //         tokens_left: updatedSubs.tokens_left
             //     }
             // })
+    }catch(error){
+        res.json({
+            errors:[
+                {
+                    msg:error.message
+                }
+            ],
+            data:null
+        })
+    }
+    
 
 }
 
