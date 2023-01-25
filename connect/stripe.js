@@ -14,8 +14,7 @@ const createCheckoutSession = async (customerID, price) => {
     line_items: [
       {
         price,
-        quantity: 1,
-        cancel_at_period_end:true //cancels when period ends
+        quantity: 1
       }
     ],
     //TODO: check before production
