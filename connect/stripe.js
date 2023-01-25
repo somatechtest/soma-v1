@@ -45,7 +45,7 @@ const createBillingSession = async (customer) => {
   //TODO: THIS IS VERY EASY IMPLEMENTATION OF BILLING SESSION AND EVENT WEBHOOKS https://www.youtube.com/watch?v=u8H6awDJVpM&list=PLy1nL-pvL2M6IYfRCmhOPcyC70zJqFoCs&index=3
   const session = await Stripe.billingPortal.sessions.create({
     customer,
-    return_url: 'https://localhost:3000'
+    return_url: `${process.env.DOMAIN_URL}`
   })
   return session
 }

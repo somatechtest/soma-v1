@@ -220,13 +220,13 @@ const getSubscription = async (req, res) => {
     }
     try{
       const session = await Stripe.createBillingSession(customerId)
-      return res.redirect(session.url);
-      // return res.status(StatusCodes.OK).json({
-      //   errors:null,
-      //   data:{
-      //     "session url":session.url
-      //   }
-      // })
+      // return res.redirect(session.url);
+      return res.status(StatusCodes.OK).json({
+        errors:null,
+        data:{
+          "session url":session.url
+        }
+      })
     }catch(error){
       return res.status(StatusCodes.NOT_FOUND).json({
         errors:[
@@ -310,7 +310,7 @@ const topupUser = async(data)=>{
  
 
   try{
-    
+
       await cuser.save()
       await userSubs.save()
       console.log("user just bought a subscription ",cuser)
