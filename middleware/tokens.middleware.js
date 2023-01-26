@@ -15,10 +15,10 @@ function compareTokens(req,res,input_tokens_length,output_tokens_length){
     let subsModel = req.subscription_model
     if(subsModel.tokens_left>=input_tokens_length+output_tokens_length){
         console.log("Serving with tokens left from plan")
-       
+       return
     }else if((subsModel.tokens_left+subsModel.top_up)>=input_tokens_length+output_tokens_length){
         console.log("Serving with topup tokens and tokens left from plan")
-        
+       return
     }
     return res.status(StatusCodes.FORBIDDEN).json({
         errors:[
