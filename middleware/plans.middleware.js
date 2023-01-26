@@ -55,9 +55,20 @@ async function planMiddleware(req,res,next){
         //TODO CHECK FOR FREE PLAN ELIGIBILITY AND APPEND REQ OBJECT WITH FREE PLAN DATA
     }
     if(subs.status == CONSTANTS.STATUS_ACTIVE){
-        console.log("User plan is not active")
+        console.log("User plan is active")
         req.plan = subs.plan
         //Allow further
+    }else{
+        req.plan = CONSTANTS.PLAN_FREE
+        console.log(`Your subscription status is ${subs.status} but serving under free plan`)
+        // return res.json({
+        //     errors:[
+        //         {
+        //             msg:`Your subscription status is ${subs.status}`
+        //         }
+        //     ],
+        //     data:null 
+        // })
     }
 
     if(subs.tokens_left<=0 && subs.top_up <=0){
