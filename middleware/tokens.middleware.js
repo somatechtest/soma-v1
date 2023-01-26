@@ -15,12 +15,23 @@ function compareTokens(req,res,input_tokens_length,output_tokens_length){
     let subsModel = req.subscription_model
     if(subsModel.tokens_left>=input_tokens_length+output_tokens_length){
         console.log("Serving with tokens left from plan")
-        return true
+       
     }else if((subsModel.tokens_left+subsModel.top_up)>=input_tokens_length+output_tokens_length){
         console.log("Serving with topup tokens and tokens left from plan")
-        return true
+        
     }
-    return false
+    return res.status(StatusCodes.FORBIDDEN).json({
+        errors:[
+            {
+                msg:"Costing more tokens than available",
+                input_tokens_length: input_tokens_length,
+                output_tokens_length: output_tokens_length,
+                tokens_left: subsModel.tokens_left,
+                top_up: subsModel.top_up
+            }
+        ],
+        data:null
+    })
 }
 
 async function tokenMiddleware(req,res,next){
@@ -57,16 +68,7 @@ async function tokenMiddleware(req,res,next){
     console.log("TOKENS LEFT ",userTokensLeft)
     console.log("TOKENS REQ ",input_tokens_length)
 
-    if(!compareTokens(req,res,input_tokens_length,output_tokens_length)){
-        return res.status(StatusCodes.FORBIDDEN).json({
-            errors:[
-                {
-                    msg:"Costing more tokens than available"
-                }
-            ],
-            data:null
-        })
-    }
+    compareTokens(req,res,input_tokens_length,output_tokens_length)
     // if(input_tokens_length+output_tokens_length>req.tokens_left){
     //     return res.status(StatusCodes.FORBIDDEN).json({
     //         errors:[
@@ -131,16 +133,7 @@ async function tokenTranslateMiddleware(req,res,next){
     let {input_tokens_length,prompt, output_tokens_length} = calculateTranslatePillsFunc(req,res)
     console.log("TOKENS LEFT ",userTokensLeft)
     console.log("TOKENS REQ ",input_tokens_length)
-    if(!compareTokens(req,res,input_tokens_length,output_tokens_length)){
-        return res.status(StatusCodes.FORBIDDEN).json({
-            errors:[
-                {
-                    msg:"Costing more tokens than available"
-                }
-            ],
-            data:null
-        })
-    }
+    compareTokens(req,res,input_tokens_length,output_tokens_length)
     req.prompt = prompt
     req.input_tokens_length = input_tokens_length
     req.output_tokens_length = output_tokens_length
@@ -178,16 +171,7 @@ async function tokenBrainstormMiddleware(req,res,next){
 
     
 
-    if(!compareTokens(req,res,input_tokens_length,output_tokens_length)){
-        return res.status(StatusCodes.FORBIDDEN).json({
-            errors:[
-                {
-                    msg:"Costing more tokens than available"
-                }
-            ],
-            data:null
-        })
-    }
+    compareTokens(req,res,input_tokens_length,output_tokens_length)
     req.prompt = prompt
     req.input_tokens_length = input_tokens_length
     req.output_tokens_length = output_tokens_length

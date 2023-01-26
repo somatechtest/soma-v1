@@ -19,7 +19,7 @@ const createCheckoutSession = async (customerID, price) => {
     ],
     //TODO: check before production
     success_url: `${process.env.DOMAIN_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.DOMAIN_URL}/payment/cancel`,
+    cancel_url: `${process.env.DOMAIN_URL}/payment/cancel?session_id={CHECKOUT_SESSION_ID}`,
     // customer_email: 'test+location_IN@example.com'
   })
 
