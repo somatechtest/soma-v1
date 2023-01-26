@@ -43,7 +43,7 @@ app.get("/", (req, res) =>
   res.json({ success: true, message: "server is running!" })
 );
 
-app.use("/api/v1/users", userRouter);
+app.use("/api/v1/", userRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/payment", payRouter);
 app.use("/api/v1/campaign", campaignRouter);
