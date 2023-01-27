@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const Subscription = require("../models/subscription.model")
 const CONSTANTS = require("../utils/utils")
 const Plan = require("../models/plan.model");
-const { calculateCreatePillsFunc, calculateTranslatePillsFunc, calculateBrainstormPillsFunc } = require("../utils/calculateCreatePillsFunc");
+const { calculateCreatePillsFunc, calculateTranslatePillsFunc, calculateBrainstormPillsFunc, calculateCreateQuickPostPillsFunc } = require("../utils/calculateCreatePillsFunc");
 const { StatusCodes } = require("http-status-codes");
 
 /***
@@ -64,7 +64,7 @@ async function tokenMiddleware(req,res,next){
             data:null
         })
     }
-    let {input_tokens_length,prompt, output_tokens_length} = calculateCreatePillsFunc(req,res)
+    let {input_tokens_length,prompt, output_tokens_length} = calculateCreateQuickPostPillsFunc(req,res)
     console.log("TOKENS LEFT ",userTokensLeft)
     console.log("TOKENS REQ ",input_tokens_length)
 
@@ -182,6 +182,9 @@ async function tokenBrainstormMiddleware(req,res,next){
     next()
     
 }
+
+
+
 
 module.exports = {
     tokenMiddleware,

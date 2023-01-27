@@ -97,6 +97,77 @@ const getCreatePrompt = (req,res)=>{
     return prompt
 
 }
+
+const getCreateQuickPostPrompt = (req,res)=>{
+    let {  tone,goal,product_name,product_description,platform,include_image,include_hashtags,length} = req.body
+
+    console.log("CREATE PROMPT RUNNING")
+    //checking for invalid platform
+    if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+        return res.json({
+            errors:[{
+                msg:`unsupported platform ${platform}`
+            }],
+            data:null
+        })
+    }
+    
+    //checking for invalid tone
+    //TODO: CHECK MAX DESC LENGTH
+    
+    if(!CONSTANTS.SUPPORTED_TONES.includes(tone.toLowerCase())){
+        return res.json({
+            errors:[
+                {
+                    msg:`unsupported tone found ${tones[i]}`
+                }
+            ],
+            data:null
+        })
+    }
+    
+
+    if(product_description.length==0){
+        return res.json({
+            errors:[{
+                msg:`Invalid description`
+            }],
+            data:null
+        })
+    }
+    
+    switch (platform){
+        case CONSTANTS.TWITTER:{
+            if(tone.length>1){
+                prompt = `generate 1 tweet with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
+            }else{
+                prompt = `generate 1 tweet for given description\ndescription: ${product_description} \n 1)`
+            }
+            break
+        }
+        case CONSTANTS.FACEBOOK:{
+            break
+        }
+        case CONSTANTS.INSTAGRAM:{
+            break
+        }
+        case CONSTANTS.LINKEDIN:{
+            break
+        }
+        default:{
+            return res.json({
+                errors:["unsupported platform"],
+                data:null
+            })
+        }
+    }
+
+    console.log("PROMPT ",prompt)
+        
+    return prompt
+
+}
+
 const getTranslatePrompt = (req,res)=>{
     let {  posts_array, language} = req.body
 
@@ -113,6 +184,7 @@ const getTranslatePrompt = (req,res)=>{
 
 module.exports = {
     getCreatePrompt,
+    getCreateQuickPostPrompt,
     getRegeneratePrompt,
     getTranslatePrompt
 }

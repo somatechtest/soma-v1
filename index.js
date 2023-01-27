@@ -9,7 +9,8 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
 });
 
 
-const userRouter = require("./routes/user.routes");
+const userRouter = require("./routes/user.routes")
+const planRouter = require("./routes/plans.routes")
 const authRouter = require("./routes/auth.routes")
 const payRouter = require("./routes/payment.routes")
 const campaignRouter = require("./routes/campign.routes")
@@ -44,6 +45,7 @@ app.get("/", (req, res) =>
 );
 
 app.use("/api/v1/", userRouter);
+app.use("/api/v1/", planRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/payment", payRouter);
 app.use("/api/v1/campaign", campaignRouter);

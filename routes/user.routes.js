@@ -4,6 +4,7 @@ const Stripe = require("../connect/stripe")
 const {body, validationResult} = require('express-validator')
 const middleware = require("../middleware/auth.middleware")
 const User = require("../models/user.model");
+const Subscription = require("../models/subscription.model")
 const { StatusCodes, OK } = require("http-status-codes");
 
 router.get('/account',  middleware.authTokenVerifyMiddleware, async function (req, res) {
