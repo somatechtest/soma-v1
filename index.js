@@ -3,6 +3,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser')
 require('dotenv').config()
 const StatusCodes = require("http-status-codes")
+
 const app = express();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2022-08-01",
@@ -40,15 +41,16 @@ admin.initializeApp({
 app.use("/api/v1/payment/webhook", bodyParser.raw({ type: "application/json" }))
 app.use(cors(), express.json());
 
-app.get("/", (req, res) =>
-  res.json({ success: true, message: "server is running!" })
-);
+// app.get("/", (req, res) =>
+//   res.json({ success: true, message: "server is running!" })
+// );
 
 app.use("/api/v1/", userRouter);
 app.use("/api/v1/", planRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/payment", payRouter);
 app.use("/api/v1/campaign", campaignRouter);
+//TODO: REMOVE ADMIN ROUTE IF NOT REQUIRED
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/", brainstormRouter);
 app.use("/api/v1/_health/",(req,res)=>{
@@ -56,5 +58,6 @@ app.use("/api/v1/_health/",(req,res)=>{
     data:"OK"
   })
 })
+
 
 module.exports = app;

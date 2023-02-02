@@ -1,3 +1,4 @@
+const { StatusCodes } = require("http-status-codes")
 const CONSTANTS = require("../utils/utils")
 const getRegeneratePrompt = (req,res)=>{
     let {  campaign_description,tones,num_posts,goal,product_name,product_description,benefits,instagram,
@@ -9,10 +10,12 @@ const getRegeneratePrompt = (req,res)=>{
 const getCreatePrompt = (req,res)=>{
     let {  campaign_description,tones,num_posts,goal,product_name,product_description,benefits,platform,length} = req.body
 
+    if(!campaign_description||!tones||!num_posts||!goal||!product_name||!product_description||!benefits||!platform||!length)
+    
     console.log("CREATE PROMPT RUNNING")
     //checking for invalid platform
     if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
-        return res.json({
+        return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
                 msg:`unsupported platform ${platform}`
             }],
@@ -20,7 +23,8 @@ const getCreatePrompt = (req,res)=>{
         })
     }
     
-    //checking for invalid tone
+    try{
+            //checking for invalid tone
     //TODO: CHECK MAX DESC LENGTH
     let toneText=" ";
     if(tones.length>0){
@@ -95,31 +99,90 @@ const getCreatePrompt = (req,res)=>{
     console.log("PROMPT ",prompt)
         
     return prompt
+    }catch(error){
+        console.log(error.stack)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors:[
+                {
+                    msg:error.message
+                }
+            ],
+            data:null
+        })
+    }
 
 }
 
 const getCreateQuickPostPrompt = (req,res)=>{
     let {  tone,goal,product_name,product_description,platform,include_image,include_hashtags,length} = req.body
-
-    console.log("CREATE PROMPT RUNNING")
-    //checking for invalid platform
-    if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
-        return res.json({
+    if(!tone||!goal||!product_name||!product_description||!platform||!include_image||!include_hashtags||!length){
+        return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
-                msg:`unsupported platform ${platform}`
+                msg:"Required parameter missing"
             }],
             data:null
         })
     }
+    try{
+        if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+            return res.json({
+                errors:[{
+                    msg:`unsupported platform ${platform}`
+                }],
+                data:null
+            })
+        }
+        
+        //checking for invalid tone
+        //TODO: CHECK MAX DESC LENGTH
+        
+        if(!CONSTANTS.SUPPORTED_TONES.includes(tone.toLowerCase())){
+            return res.json({
+                errors:[
+                    {
+                        msg:`unsupported tone found ${tone}`
+                    }
+                ],
+                data:null
+            })
+        }
     
-    //checking for invalid tone
-    //TODO: CHECK MAX DESC LENGTH
+        
+        switch (platform){
+            case CONSTANTS.TWITTER:{
+                if(tone.length>1){
+                    prompt = `generate 1 tweet with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
+                }else{
+                    prompt = `generate 1 tweet for given description\ndescription: ${product_description} \n 1)`
+                }
+                break
+            }
+            case CONSTANTS.FACEBOOK:{
+                break
+            }
+            case CONSTANTS.INSTAGRAM:{
+                break
+            }
+            case CONSTANTS.LINKEDIN:{
+                break
+            }
+            default:{
+                return res.json({
+                    errors:["unsupported platform"],
+                    data:null
+                })
+            }
+        }
     
-    if(!CONSTANTS.SUPPORTED_TONES.includes(tone.toLowerCase())){
-        return res.json({
+        console.log("PROMPT ",prompt)
+            
+        return prompt
+    }catch(error){
+        console.log(error.stack)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors:[
                 {
-                    msg:`unsupported tone found ${tones[i]}`
+                    msg:error.message
                 }
             ],
             data:null
@@ -127,50 +190,19 @@ const getCreateQuickPostPrompt = (req,res)=>{
     }
     
 
-    if(product_description.length==0){
-        return res.json({
-            errors:[{
-                msg:`Invalid description`
-            }],
-            data:null
-        })
-    }
-    
-    switch (platform){
-        case CONSTANTS.TWITTER:{
-            if(tone.length>1){
-                prompt = `generate 1 tweet with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-            }else{
-                prompt = `generate 1 tweet for given description\ndescription: ${product_description} \n 1)`
-            }
-            break
-        }
-        case CONSTANTS.FACEBOOK:{
-            break
-        }
-        case CONSTANTS.INSTAGRAM:{
-            break
-        }
-        case CONSTANTS.LINKEDIN:{
-            break
-        }
-        default:{
-            return res.json({
-                errors:["unsupported platform"],
-                data:null
-            })
-        }
-    }
-
-    console.log("PROMPT ",prompt)
-        
-    return prompt
-
 }
 
 const getTranslatePrompt = (req,res)=>{
     let {  posts_array, language} = req.body
-
+    if(!posts_array|| !language){
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            errors:[{
+                msg:"Required parameter missing"
+            }],
+            data:null
+        })
+    }
+    try{
         let text = "\n"
         for(let i=1;i<=posts_array.length;i++){
             text = text+i+")"+posts_array[i-1]+" \n"
@@ -179,6 +211,20 @@ const getTranslatePrompt = (req,res)=>{
         let prompt = `Translate these into ${language} ${text}`
         console.log("TRANSLATE ",prompt)
         return prompt
+        
+    }catch(error){
+
+        console.log(error.stack)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors:[
+                {
+                    msg:error.message
+                }
+            ],
+            data:null
+        })
+
+    }
 
 }
 

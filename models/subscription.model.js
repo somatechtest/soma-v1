@@ -10,7 +10,7 @@ var subscriptionSchema = new mongoose.Schema({
   //TODO: USE STATUS HERE INSTEAD OF END DATE
   //m-monthly a-annual
   plan:{type: String, enum: ['none','free', 'pro_m', 'pro_a', 'elite_m', 'elite_a'], default: 'none'},
-}, {timestamps:true});
+});
 
 const Subscription = mongoose.model("subscriptions", subscriptionSchema);
 module.exports = Subscription;

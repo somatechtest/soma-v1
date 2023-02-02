@@ -3,6 +3,7 @@ const User = require("../models/user.model")
 const Plan = require("../models/plan.model")
 const CONSTANTS = require("../utils/utils");
 const Subscription = require("../models/subscription.model");
+const { StatusCodes } = require("http-status-codes");
 
 
 /***
@@ -15,7 +16,8 @@ const Subscription = require("../models/subscription.model");
 async function planMiddleware(req,res,next){
     let uid = req.uid
     let customerId=null;    
-    const subs = await Subscription.findOne({"uid":uid})
+    try{
+        const subs = await Subscription.findOne({"uid":uid})
     // console.log("USER SBSCRIPTION ", subs)
     
     if(!subs){
@@ -92,6 +94,16 @@ async function planMiddleware(req,res,next){
     console.log(req.plan)
     console.log(req.end_date)
     console.log(req.tokens_left)
+    }catch(error){
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            data:null,
+            errors:[
+                {
+                    msg:error.message
+                }
+            ]
+        })
+    }
     
 }
 

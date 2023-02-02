@@ -6,7 +6,7 @@ const {body, validationResult} = require('express-validator')
 const {authTokenVerifyMiddleware} = require("../middleware/auth.middleware")
 const {planMiddleware} = require("../middleware/plans.middleware")
 const User = require("../models/user.model");
-const { tokenMiddleware, tokenTranslateMiddleware } = require("../middleware/tokens.middleware");
+const { tokenMiddleware, tokenTranslateMiddleware, tokenQuickPostMiddleware } = require("../middleware/tokens.middleware");
 const { createCampaign } = require("../controllers/createCampaign.controller");
 const { saveCampaign } = require("../controllers/saveCampaign.controller");
 const { initCampaign, getCampaign, getAllCompletedCampaigns, updateCampaignName, deleteCampaign, getAllDraftCampaigns } = require("../controllers/campaignHelper.controller");
@@ -31,10 +31,12 @@ router.get('/get_completed_campaigns', authTokenVerifyMiddleware, getAllComplete
 
 //TODO: ADD AUTH MIDDLEWARE BELOW  middleware.authTokenVerifyMiddleware,
 router.post('/create', authTokenVerifyMiddleware, planMiddleware, tokenMiddleware, createCampaign)
-router.post('/quick_post', authTokenVerifyMiddleware, planMiddleware, tokenMiddleware, createQuickPost)
+router.post('/quick_post', authTokenVerifyMiddleware, planMiddleware, tokenQuickPostMiddleware, createQuickPost)
 router.post('/regenerate', authTokenVerifyMiddleware, planMiddleware, tokenMiddleware, async function (req, res) {
     //to regenerate single post, with given tone or edited post
 })
+
+//TODO: DOUBLE CHECK IF CALCULATE PILLS ROUTER IS NEEDED?
 router.get('/pill_calculator', calculatePills)
 //TODO: ADD AUTH MIDDLEWARE BELOW  middleware.authTokenVerifyMiddleware,
 router.post('/translate',  authTokenVerifyMiddleware, planMiddleware, tokenTranslateMiddleware, translateCampaign )

@@ -1,7 +1,7 @@
 const stripe = require('stripe')
 require('dotenv').config()
 const Stripe = stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2020-08-27'
+  apiVersion: '2022-11-15'
 })
 //TODO-CONSIDER THIS BEFORE PRODUCTION 
 //cancel_at_period_end

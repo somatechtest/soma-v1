@@ -29,26 +29,38 @@ function validateName(name,req,res){
 async function createUserAndSubscriptionInDB(req,res,_name,_email,_uid,_s_cid,_emialVerified,_plan,_tokensLeft,_endDate){
     try{
         
-        let temp = await User.create({
+        let user = await User.create({
             name:_name,
             email:_email,
             uid:_uid,
             s_cid:_s_cid,
             verified:_emialVerified
         })
-        let subs = await Subscription.create({
+        let userSubs = await Subscription.create({
             tokens_left: _tokensLeft, uid: _uid, end_date: _endDate,plan:_plan
         })
 
         return res.status(StatusCodes.OK).json({
             errors:null,
             data:{
-                "user":temp,
-                "subscription":subs
+                "user":{
+                    name: user.name,
+                    email: user.email,
+                    verified : user.verified,
+                    createdAt: user.createdAt
+
+                },
+                "subscription":{
+                    tokens_left: userSubs.tokens_left,
+                    end_date:userSubs.end_date,
+                    top_up: userSubs.top_up,
+                    plan:userSubs.plan,
+                    status:userSubs.status
+                }
             }
         })
     }catch(error){
-        console.log("user and subscription creation eroor ",error.message)
+        console.log(error.stack)
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors:[
                 {
@@ -183,8 +195,20 @@ async function loginUser(req,res){
                     return res.status(StatusCodes.OK).json({
                         errors:null,
                         data:{
-                            "user":saved,
-                            "subscription":subsSaved
+                            "user":{
+                                name: saved.name,
+                                email: saved.email,
+                                verified : saved.verified,
+                                createdAt: saved.createdAt
+        
+                            },
+                            "subscription":{
+                                tokens_left: subsSaved.tokens_left,
+                                end_date:subsSaved.end_date,
+                                top_up: subsSaved.top_up,
+                                plan:subsSaved.plan,
+                                status:subsSaved.status
+                            }
                         }
                     })
                 }catch(err){
@@ -197,9 +221,31 @@ async function loginUser(req,res){
                         data:null
                     })
                 }
+            }else{
+                console.log("CASE 4")
+                let subs = await Subscription.findOne({"uid":uid})
+                return res.status(StatusCodes.OK).json({
+                    errors:null,
+                    data:{
+                        "user":{
+                            name: user.name,
+                            email: user.email,
+                            verified : user.verified,
+                            createdAt: user.createdAt
+    
+                        },
+                        "subscription":{
+                            tokens_left: subs.tokens_left,
+                            end_date:subs.end_date,
+                            top_up: subs.top_up,
+                            plan:subs.plan,
+                            status:subs.status
+                        }
+                    }
+                })
             }
         }
-        console.log("CASE 4")
+        
     }
     
 }
@@ -214,6 +260,16 @@ async function signUpUser(req,res){
     
     if(!req.body.loginWithGoogle){
         name = req.body.name
+        if(!name){
+            return res.status(StatusCodes.BAD_REQUEST).json({
+                errors:[
+                    {
+                        msg:"Parameter name missing"
+                    }
+                ],
+                data:null
+            })
+        }
         validateName(name)
     }else{
         name = req.name

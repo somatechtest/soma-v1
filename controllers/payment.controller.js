@@ -17,20 +17,6 @@ const { StatusCodes } = require("http-status-codes");
 
 const createCheckout = async (req, res) => {
     const { product } = req.body
-    let customerId=null;
-    const cuser = await User.findOne({"uid":req.uid})
-    if(!cuser){
-        return res.status(StatusCodes.NOT_FOUND).json({
-            errors:[
-                {
-                    msg:"User not found"
-                }
-            ],
-            data:null
-        })
-    }else{
-        customerId = cuser.s_cid
-    }
     if(!product){
       return res.status(StatusCodes.BAD_REQUEST).json({
         errors:[
@@ -41,6 +27,9 @@ const createCheckout = async (req, res) => {
         data:null
     })
     }
+    let customerId=null;
+    
+    
     if(!plansArray.includes(product.toUpperCase())){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[
@@ -54,6 +43,19 @@ const createCheckout = async (req, res) => {
   
     const price = productToPriceMap[product.toUpperCase()]
     try{
+      const cuser = await User.findOne({"uid":req.uid})
+      if(!cuser){
+          return res.status(StatusCodes.NOT_FOUND).json({
+              errors:[
+                  {
+                      msg:"User not found"
+                  }
+              ],
+              data:null
+          })
+      }else{
+          customerId = cuser.s_cid
+      }
       const session = await Stripe.createCheckoutSession(customerId, price)
       return res.status(StatusCodes.OK).json({
         errors:null,
@@ -79,19 +81,7 @@ const createCheckout = async (req, res) => {
 const createTopupCheckout = async (req, res) => {
   const { product } = req.body
   let customerId=null;
-  const cuser = await User.findOne({"uid":req.uid})
-  if(!cuser){
-      return res.status(StatusCodes.NOT_FOUND).json({
-          errors:[
-              {
-                  msg:"User not found"
-              }
-          ],
-          data:null
-      })
-  }else{
-      customerId = cuser.s_cid
-  }
+  
   if(!product){
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors:[
@@ -116,6 +106,19 @@ const createTopupCheckout = async (req, res) => {
   const price = topupToPriceMap[product.toUpperCase()]
   console.log("PRICE ",price)
   try{
+    const cuser = await User.findOne({"uid":req.uid})
+    if(!cuser){
+        return res.status(StatusCodes.NOT_FOUND).json({
+            errors:[
+                {
+                    msg:"User not found"
+                }
+            ],
+            data:null
+        })
+    }else{
+        customerId = cuser.s_cid
+    }
     const session = await Stripe.createTopupCheckoutSession(customerId, price)
     return res.status(StatusCodes.OK).json({
       errors:null,
@@ -155,6 +158,7 @@ const getSubscription = async (req, res) => {
         subsId = cuser.subs_id
       }
   
+      //TODO: CHECK SUBSCRIPTION RETURNED AND RESTRICT THE PARAMS
       let subs = await Stripe.getSubscriptionFromSubscriptionID(subsId)
       return res.status(StatusCodes.OK).json({
         errors:null,
@@ -179,6 +183,16 @@ const getSubscription = async (req, res) => {
 
   const getSubscriptionFromID = async (req, res) => {
     let subsId=req.query.id;
+    if(!subsId){
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        errors:[
+            {
+                msg:"Id missing"
+            }
+        ],
+        data:null
+      })
+    }
     try{ 
   
       let subs = await Stripe.getSubscriptionFromSubscriptionID(subsId)
@@ -205,6 +219,7 @@ const getSubscription = async (req, res) => {
 
   const createBilling = async (req, res) => {
     let customerId=null;
+    try{
     const cuser = await User.findOne({"uid":req.uid})
     if(!cuser){
         return res.status(StatusCodes.NOT_FOUND).json({
@@ -218,7 +233,7 @@ const getSubscription = async (req, res) => {
     }else{
         customerId = cuser.s_cid
     }
-    try{
+    
       const session = await Stripe.createBillingSession(customerId)
       // return res.redirect(session.url);
       return res.status(StatusCodes.OK).json({
@@ -378,6 +393,7 @@ const updateUserPlan = async(data)=>{
       userSubs.plan = dbPlan
     }
     // user.end_date = new Date(data.current_period_end * 1000)
+    //STATUS IS UPDATED HERE, IF FAILED, INCOMPLETE WHATEVER
     userSubs.status = data.status
     if(cuser.has_trial){
       cuser.has_trial = false

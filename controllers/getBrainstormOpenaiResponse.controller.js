@@ -2,7 +2,8 @@ const Subscription = require("../models/subscription.model");
 const CONSTANTS = require("../utils/utils")
 const openai = require("../connect/openai");
 const { updateTokensUsed } = require("./campaignHelper.controller");
-const getBrainstormOpenaiResponse = async function (req, res) {
+const 
+getBrainstormOpenaiResponse = async function (req, res) {
     
     try{
         let resp = await openai.openai.createCompletion({
@@ -39,7 +40,8 @@ const getBrainstormOpenaiResponse = async function (req, res) {
             //     }
             // })
     }catch(error){
-        res.json({
+        console.log(error.stack)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             errors:[
                 {
                     msg:error.message
