@@ -166,7 +166,7 @@ async function tokenQuickPostMiddleware(req,res,next){
             data:null
         })
     }
-    let {input_tokens_length,prompt, output_tokens_length} = calculateCreatePillsFunc(req,res)
+    let {input_tokens_length,prompt, output_tokens_length} = calculateCreateQuickPostPillsFunc(req,res)
     console.log("TOKENS LEFT ",userTokensLeft)
     console.log("TOKENS REQ ",input_tokens_length)
 
