@@ -3,7 +3,7 @@ const INSTAGRAM = "instagram"
 const LINKEDIN = "linkedin"
 const FACEBOOK = "facebook"
 const SUPPORTED_PLATFORMS = [TWITTER,INSTAGRAM,LINKEDIN,FACEBOOK]
-const SUPPORTED_TONES = ["formal","informal","witty","funny"]
+const SUPPORTED_TONES = ["friendly","professional","funny","luxurious","bold","adventurous","empathetic","convincing","optimistic","smart","helpful","formal","bullish"]
 const CAPMAIGN_STATES_ARRAY = ["completed","draft"]
 const MAX_TONES_SUPPORTED = 3
 const MAX_NUM_POSTS = 30
@@ -61,6 +61,9 @@ const topupToDBTerminology = {
 
 const POST_LENGTH_ARRAY = [LENGTH_SHORT,LENGTH_OPTIMUM,LENGTH_LONG]
 
+const TOKENS_PER_IMAGE = 2;
+const TOKENS_PER_VIDEO = 5;
+
 module.exports = {
     SUPPORTED_PLATFORMS,
     SUPPORTED_TONES,
@@ -96,5 +99,7 @@ module.exports = {
     LENGTH_LONG,
     LENGTH_OPTIMUM,
     POST_LENGTH_ARRAY,
-    CAPMAIGN_STATES_ARRAY
+    CAPMAIGN_STATES_ARRAY,
+    TOKENS_PER_IMAGE,
+    TOKENS_PER_VIDEO
 }
