@@ -16,10 +16,11 @@ const createQuickPost = async function (req, res) {
     let resp;
     try{
         resp = await openai.openai.createCompletion({
-            model: CONSTANTS.MODEL_CURIE,
+            model: CONSTANTS.MODEL_DAVINCI,
             // prompt: prompt,
             prompt: req.prompt,
-            max_tokens: req.output_tokens_length,
+            // max_tokens: req.output_tokens_length,
+            max_tokens: 1000,
             temperature: 0,
         });
         let temp = resp.data

@@ -150,37 +150,43 @@ const getCreateQuickPostPrompt = (req,res)=>{
         
         switch (platform){
             case CONSTANTS.TWITTER:{
-             
-                if(tone.length>1){
-                    prompt = `generate 1 tweet with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                }else{
-                    prompt = `generate 1 tweet for given description\ndescription: ${product_description} \n 1)`
-                }
+                prompt = `generate 1 tweet with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
+                // if(tone.length>1){
+                //     prompt = `generate 1 tweet with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
+                // }else{
+                //     prompt = `generate 1 tweet for given description\ndescription: ${product_description} \n 1)`
+                // }
                 break
 
             }
             case CONSTANTS.FACEBOOK:{
-                if(tone.length>1){
-                    prompt = `generate 1 facebook post with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                }else{
-                    prompt = `generate 1 facebook post for given description\ndescription: ${product_description} \n 1)`
-                }
+                prompt = `generate 1 facebook post with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
+
+                // if(tone.length>1){
+                //     prompt = `generate 1 facebook post with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
+                // }else{
+                //     prompt = `generate 1 facebook post for given description\ndescription: ${product_description} \n 1)`
+                // }
                 break
             }
             case CONSTANTS.INSTAGRAM:{
-                if(tone.length>1){
-                    prompt = `generate 1 instagram caption with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                }else{
-                    prompt = `generate 1 instagram caption for given description\ndescription: ${product_description} \n 1)`
-                }
+                prompt = `generate 1 instagram caption with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
+
+                // if(tone.length>1){
+                //     prompt = `generate 1 instagram caption with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
+                // }else{
+                //     prompt = `generate 1 instagram caption for given description\ndescription: ${product_description} \n 1)`
+                // }
                 break
             }
             case CONSTANTS.LINKEDIN:{
-                if(tone.length>1){
-                    prompt = `generate 1 linkedin post with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                }else{
-                    prompt = `generate 1 linkedin post for given description\ndescription: ${product_description} \n 1)`
-                }
+                prompt = `generate 1 linkedin post with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
+
+                // if(tone.length>1){
+                //     prompt = `generate 1 linkedin post with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
+                // }else{
+                //     prompt = `generate 1 linkedin post for given description\ndescription: ${product_description} \n 1)`
+                // }
                 break
             }
             default:{

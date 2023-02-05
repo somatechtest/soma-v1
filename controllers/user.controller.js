@@ -7,6 +7,7 @@
 const admin = require("firebase-admin");
 const Stripe = require("../connect/stripe")
 const middleware = require("../middleware/auth.middleware")
+const nodemailer = require("nodemailer")
 const User = require("../models/user.model")
 const Plan = require("../models/plan.model")
 const Subscription = require("../models/subscription.model")
@@ -24,6 +25,46 @@ function validateName(name,req,res){
             data:null
         })
     }
+}
+
+function handleSendEmail(req, res) {
+    // Not the movie transporter!
+    console.log("PWD ",process.env.NODEMAILER_EMAIL_PWD)
+    var transporter = nodemailer.createTransport({
+     service: 'Gmail',
+     auth: {
+         user: process.env.NODEMAILER_EMAIL, 
+         pass: process.env.NODEMAILER_EMAIL_PWD 
+     }
+    });
+    var text = 'Hello from \n\n' + req.body.user_name;
+    var mailOptions = {
+        from: 'somatesttech@gmail.com', // sender address
+        //to: req.email, // list of receivers
+        to: "kushalchukanatti123@gmail.com", // list of receivers
+        subject: 'Welcome', // Subject line
+        text: text,
+        html: '<!DOCTYPE html>'+
+        '<html><head><title>Appointment</title>'+
+        '</head><body><div>'+
+        '<img src="http://evokebeautysalon1.herokuapp.com/main/img/logo.png" alt="" width="160">'+
+        '<p>Thank you for your appointment.</p>'+
+        '<p>Here is summery:</p>'+
+        '<p>Name: James Falcon</p>'+
+        '<p>Date: Feb 2, 2017</p>'+
+        '<p>Package: Hair Cut </p>'+
+        '<p>Arrival time: 4:30 PM</p>'+
+        '</div></body></html>'
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+            res.json({yo: 'error'});
+        }else{
+            console.log('Message sent: ' + info.response);
+            res.json({yo: info.response});
+        };
+    });
 }
 
 async function createUserAndSubscriptionInDB(req,res,_name,_email,_uid,_s_cid,_emialVerified,_plan,_tokensLeft,_endDate){
@@ -308,5 +349,6 @@ async function signUpUser(req,res){
 
 module.exports = {
     signUpUser,
-    loginUser
+    loginUser,
+    handleSendEmail
 }

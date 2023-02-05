@@ -18,6 +18,7 @@ const campaignRouter = require("./routes/campign.routes")
 const adminRouter = require("./routes/admin.routes")
 const brainstormRouter = require("./routes/brainstorm.routes")
 var admin = require("firebase-admin");
+const { handleSendEmail } = require("./controllers/user.controller");
 // var serviceAccount = require("./firebasecreds.json");
 
 var serviceAccount = 
@@ -53,6 +54,8 @@ app.use("/api/v1/campaign", campaignRouter);
 //TODO: REMOVE ADMIN ROUTE IF NOT REQUIRED
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/", brainstormRouter);
+
+app.use("/api/v1/send", handleSendEmail);
 app.use("/api/v1/_health/",(req,res)=>{
   res.status(StatusCodes.OK).json({
     data:"OK"
