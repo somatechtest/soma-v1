@@ -3,6 +3,9 @@ const cors = require("cors");
 const bodyParser = require('body-parser')
 require('dotenv').config()
 const StatusCodes = require("http-status-codes")
+const ChatGPTAPI = require('chatgpt')
+
+
 
 const app = express();
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY, {
@@ -18,7 +21,6 @@ const campaignRouter = require("./routes/campign.routes")
 const adminRouter = require("./routes/admin.routes")
 const brainstormRouter = require("./routes/brainstorm.routes")
 var admin = require("firebase-admin");
-const { handleSendEmail } = require("./controllers/user.controller");
 // var serviceAccount = require("./firebasecreds.json");
 
 var serviceAccount = 
@@ -55,10 +57,22 @@ app.use("/api/v1/campaign", campaignRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/", brainstormRouter);
 
-app.use("/api/v1/send", handleSendEmail);
 app.use("/api/v1/_health/",(req,res)=>{
   res.status(StatusCodes.OK).json({
     data:"OK"
+  })
+})
+
+
+console.log(res.text)
+app.use("/api/v1/test/",async(req,res)=>{
+  const api = new ChatGPTAPI({
+    apiKey: process.env.OPENAI_SECRET_KEY
+  })
+    
+  const resp = await api.sendMessage('Hello World!')
+  res.status(StatusCodes.OK).json({
+    data:resp.text
   })
 })
 

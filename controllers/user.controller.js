@@ -27,7 +27,7 @@ function validateName(name,req,res){
     }
 }
 
-function handleSendEmail(req, res) {
+function sendWelcomeMail(email) {
     // Not the movie transporter!
     console.log("PWD ",process.env.NODEMAILER_EMAIL_PWD)
     var transporter = nodemailer.createTransport({
@@ -37,32 +37,27 @@ function handleSendEmail(req, res) {
          pass: process.env.NODEMAILER_EMAIL_PWD 
      }
     });
-    var text = 'Hello from \n\n' + req.body.user_name;
+    var text = 'Hello from \n\n' + 'soma';
     var mailOptions = {
         from: 'somatesttech@gmail.com', // sender address
         //to: req.email, // list of receivers
-        to: "kushalchukanatti123@gmail.com", // list of receivers
+        to: email, // list of receivers
         subject: 'Welcome', // Subject line
         text: text,
         html: '<!DOCTYPE html>'+
-        '<html><head><title>Appointment</title>'+
+        '<html><head><title>Welcome email from marketingcampaign.ai</title>'+
         '</head><body><div>'+
         '<img src="http://evokebeautysalon1.herokuapp.com/main/img/logo.png" alt="" width="160">'+
-        '<p>Thank you for your appointment.</p>'+
-        '<p>Here is summery:</p>'+
-        '<p>Name: James Falcon</p>'+
-        '<p>Date: Feb 2, 2017</p>'+
-        '<p>Package: Hair Cut </p>'+
-        '<p>Arrival time: 4:30 PM</p>'+
+        '<p>Thank you for siging up</p>'+
         '</div></body></html>'
     };
     transporter.sendMail(mailOptions, function(error, info){
         if(error){
             console.log(error);
-            res.json({yo: 'error'});
+            
         }else{
-            console.log('Message sent: ' + info.response);
-            res.json({yo: info.response});
+            console.log('Welcome message sent for: '+email+' : info' + info.response);
+           
         };
     });
 }
@@ -151,6 +146,7 @@ async function loginUser(req,res){
         date.setMonth(date.getMonth() + 1)
         plan = CONSTANTS.PLAN_FREE
         customer = await Stripe.addNewCustomer(mail,uid)
+        sendWelcomeMail(req.email)
         await createUserAndSubscriptionInDB(req,res,name,mail,uid,customer.id,emailVerified,plan,tokens,date)
 
             
@@ -185,6 +181,7 @@ async function loginUser(req,res){
                 let customerId
                 try{
                     customerId = await Stripe.addNewCustomer(mail,uid)
+                    sendWelcomeMail(req.email)
                 }catch(error){
                     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
                         errors:[
@@ -349,6 +346,5 @@ async function signUpUser(req,res){
 
 module.exports = {
     signUpUser,
-    loginUser,
-    handleSendEmail
+    loginUser
 }

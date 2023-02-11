@@ -114,8 +114,8 @@ const getCreatePrompt = (req,res)=>{
 }
 
 const getCreateQuickPostPrompt = (req,res)=>{
-    let {  tone,goal,product_name,product_description,platform,include_image,include_hashtags,length} = req.body
-    if(!tone||!goal||!product_name||!product_description||!platform||include_image==null||include_hashtags==null||!length){
+    let {  tone,goal,product_name,product_description,platforms,include_image,include_hashtags,length} = req.body
+    if(!tone||!goal||!product_name||!product_description||!platforms||include_image==null||include_hashtags==null||!length){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
                 msg:"Required parameter missing"
@@ -124,14 +124,16 @@ const getCreateQuickPostPrompt = (req,res)=>{
         })
     }
     try{
-        if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
-            return res.json({
-                errors:[{
-                    msg:`unsupported platform ${platform}`
-                }],
-                data:null
-            })
-        }
+        platforms.forEach((platform)=>{
+            if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+                return res.json({
+                    errors:[{
+                        msg:`unsupported platform ${platform}`
+                    }],
+                    data:null
+                })
+            }
+        })
         
         //checking for invalid tone
         //TODO: CHECK MAX DESC LENGTH
