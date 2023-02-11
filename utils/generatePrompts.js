@@ -126,23 +126,34 @@ const getCreateQuickPostPrompt = (req,res)=>{
     try{
         let promptV1 = "write "
         let platformTone = ""
-        platforms.forEach((platform)=>{
+        for(let i=0;i<platforms.length;i++){
+            let platform = platforms[i]
             if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
-            return res.json({
-                errors:[{
-                    msg:`unsupported platform ${platform}`
-                }],
-                data:null
-            })
-            }else{
-                if(platform!=CONSTANTS.TWITTER){
-                    platformTone = platformTone+ "1 lengthy "+tone+" "+platform+" post, "
+                return res.json({
+                    errors:[{
+                        msg:`unsupported platform ${platform}`
+                    }],
+                    data:null
+                })
                 }else{
-                    platformTone = platformTone+ "1 lengthy "+tone+" "+" tweet, "
-                } 
-                
-            }
-        })
+                    if(i==platforms.length-1){
+                        if(platform!=CONSTANTS.TWITTER){
+                            platformTone = platformTone+ " and 1 lengthy "+tone+" "+platform+" post, "
+                        }else{
+                            platformTone = platformTone+ " and 1 lengthy "+tone+" "+" tweet, "
+                        } 
+                    }else{
+                        if(platform!=CONSTANTS.TWITTER){
+                            platformTone = platformTone+ "1 lengthy "+tone+" "+platform+" post, "
+                        }else{
+                            platformTone = platformTone+ "1 lengthy "+tone+" "+" tweet, "
+                        } 
+                    }
+                    
+                }
+
+        }
+        
         promptV1 = promptV1+platformTone
         //adding goal
         promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"

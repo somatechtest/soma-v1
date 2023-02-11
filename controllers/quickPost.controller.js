@@ -19,8 +19,8 @@ const createQuickPost = async function (req, res) {
             // prompt: prompt,
             prompt: req.prompt,
             // max_tokens: req.output_tokens_length,
-            max_tokens: 1000,
-            temperature: 0,
+            max_tokens: 1500,
+            temperature: 0.9,
         });
         let temp = resp.data
     
