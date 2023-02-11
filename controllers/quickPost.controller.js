@@ -12,7 +12,6 @@ const { updateTokensUsed } = require("./campaignHelper.controller")
 const createQuickPost = async function (req, res) {
     
     
-    
     let resp;
     try{
         resp = await openai.openai.createCompletion({

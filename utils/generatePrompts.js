@@ -114,8 +114,8 @@ const getCreatePrompt = (req,res)=>{
 }
 
 const getCreateQuickPostPrompt = (req,res)=>{
-    let {  tone,goal,product_name,product_description,platform,include_image,include_hashtags,length} = req.body
-    if(!tone||!goal||!product_name||!product_description||!platform||include_image==null||include_hashtags==null||!length){
+    let {  tone,goal,product_name,product_description,platforms,include_image,include_hashtags,length} = req.body
+    if(!tone||!goal||!product_name||!product_description||!platforms||include_image==null||include_hashtags==null||!length){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
                 msg:"Required parameter missing"
@@ -124,14 +124,32 @@ const getCreateQuickPostPrompt = (req,res)=>{
         })
     }
     try{
-        if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+        let promptV1 = "write "
+        let platformTone = ""
+        platforms.forEach((platform)=>{
+            if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
             return res.json({
                 errors:[{
                     msg:`unsupported platform ${platform}`
                 }],
                 data:null
             })
-        }
+            }else{
+                if(platform!=CONSTANTS.TWITTER){
+                    platformTone = platformTone+ "1 lengthy "+tone+" "+platform+" post, "
+                }else{
+                    platformTone = platformTone+ "1 lengthy "+tone+" "+" tweet, "
+                } 
+                
+            }
+        })
+        promptV1 = promptV1+platformTone
+        //adding goal
+        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
+        promptV1 = promptV1+"product  name - "+product_name+" \n"
+        promptV1 = promptV1+"product description - "+product_description+" \n"
+        promptV1 = promptV1+"\n "+platforms[0]+" : \n"
+
         
         //checking for invalid tone
         //TODO: CHECK MAX DESC LENGTH
@@ -148,55 +166,8 @@ const getCreateQuickPostPrompt = (req,res)=>{
         }
     
         
-        switch (platform){
-            case CONSTANTS.TWITTER:{
-                prompt = `generate 1 tweet with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
-                // if(tone.length>1){
-                //     prompt = `generate 1 tweet with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                // }else{
-                //     prompt = `generate 1 tweet for given description\ndescription: ${product_description} \n 1)`
-                // }
-                break
 
-            }
-            case CONSTANTS.FACEBOOK:{
-                prompt = `generate 1 facebook post with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
-
-                // if(tone.length>1){
-                //     prompt = `generate 1 facebook post with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                // }else{
-                //     prompt = `generate 1 facebook post for given description\ndescription: ${product_description} \n 1)`
-                // }
-                break
-            }
-            case CONSTANTS.INSTAGRAM:{
-                prompt = `generate 1 instagram caption with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
-
-                // if(tone.length>1){
-                //     prompt = `generate 1 instagram caption with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                // }else{
-                //     prompt = `generate 1 instagram caption for given description\ndescription: ${product_description} \n 1)`
-                // }
-                break
-            }
-            case CONSTANTS.LINKEDIN:{
-                prompt = `generate 1 linkedin post with tones ${tone} for given description.do not give generic responses, use factual, recent data and elaborate the responses.  provide a keyword to search image for that tweet, in new line after the tweet as $K$=\ndescription: ${product_description} \n 1)`
-
-                // if(tone.length>1){
-                //     prompt = `generate 1 linkedin post with tones ${tone} for given description\ndescription: ${product_description} \n 1)`
-                // }else{
-                //     prompt = `generate 1 linkedin post for given description\ndescription: ${product_description} \n 1)`
-                // }
-                break
-            }
-            default:{
-                return res.json({
-                    errors:["unsupported platform"],
-                    data:null
-                })
-            }
-        }
-    
+        let prompt  = promptV1
         console.log("PROMPT ",prompt)
             
         return prompt

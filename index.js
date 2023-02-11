@@ -55,7 +55,9 @@ app.use("/api/v1/campaign", campaignRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/", brainstormRouter);
 
-app.use("/api/v1/send", handleSendEmail);
+//send welcome mail
+// app.use("/api/v1/send", handleSendEmail);
+
 app.use("/api/v1/_health/",(req,res)=>{
   res.status(StatusCodes.OK).json({
     data:"OK"
