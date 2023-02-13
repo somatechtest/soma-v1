@@ -2,7 +2,7 @@ const admin = require("firebase-admin");
 const Subscription = require("../models/subscription.model")
 const CONSTANTS = require("../utils/utils")
 const Plan = require("../models/plan.model");
-const { calculateCreatePillsFunc, calculateTranslatePillsFunc, calculateBrainstormPillsFunc, calculateCreateQuickPostPillsFunc } = require("../utils/calculateCreatePillsFunc");
+const { calculateCreatePillsFunc, calculateTranslatePillsFunc, calculateBrainstormPillsFunc, calculateCreateQuickPostPillsFunc, calculateRegeneratePillsFunc } = require("../utils/calculateCreatePillsFunc");
 const { StatusCodes } = require("http-status-codes");
 
 /***
@@ -89,6 +89,74 @@ async function tokenMiddleware(req,res,next){
         })
     }
     let {input_tokens_length,prompt, output_tokens_length} = calculateCreatePillsFunc(req,res)
+    console.log("TOKENS LEFT ",userTokensLeft)
+    console.log("TOKENS REQ ",input_tokens_length)
+
+    compareTokens(req,res,input_tokens_length,output_tokens_length)
+    // if(input_tokens_length+output_tokens_length>req.tokens_left){
+    //     return res.status(StatusCodes.FORBIDDEN).json({
+    //         errors:[
+    //             {
+    //                 msg:"Costing more tokens than available"
+    //             }
+    //         ],
+    //         data:null
+    //     })
+    // }
+    req.prompt = prompt
+    req.input_tokens_length = input_tokens_length
+    req.output_tokens_length = output_tokens_length
+
+    //get input tokens
+    
+    
+    next()
+    }catch(error){
+
+        console.log(error.stack)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors:[
+                {
+                    msg:error.message
+                }
+            ],
+            data:null
+        })
+
+    }
+    
+}
+
+async function tokenRegenerateMiddleware(req,res,next){
+    let uid = req.uid
+    let userPlan = req.plan
+    let userTokensLeft = req.tokens_left
+    let userEndDate = req.end_date
+    let subsStatus = req.status
+    let {platform,post} = req.body
+    if(!platform || !post){
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            errors:[{
+                msg:"required parameter missing"
+            }],
+            data:null
+        })
+    }
+
+    try{
+    //checking plan status
+    if(req.status!=CONSTANTS.STATUS_ACTIVE){
+        console.log("NO PLAN IS ACTIVE SERVING UNDER FREE PLAN")
+    }
+
+    //fetching more details aout the "plan"
+    let planDetails = await Plan.findOne({"plan":userPlan})
+    console.log("PLAN ", userPlan)
+    // console.log("LOGS FROM TOKENS MIDDLEWARE planDetails",planDetails)
+    //read body requirements and check for validation and tokens further
+    //check for num_posts should be less than max in the plan
+    
+    let {input_tokens_length,prompt, output_tokens_length} = calculateRegeneratePillsFunc(req,res)
     console.log("TOKENS LEFT ",userTokensLeft)
     console.log("TOKENS REQ ",input_tokens_length)
 
@@ -340,5 +408,6 @@ module.exports = {
     tokenMiddleware,
     tokenTranslateMiddleware,
     tokenBrainstormMiddleware,
-    tokenQuickPostMiddleware
+    tokenQuickPostMiddleware,
+    tokenRegenerateMiddleware
 }

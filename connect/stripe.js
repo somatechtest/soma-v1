@@ -10,6 +10,7 @@ const Stripe = stripe(process.env.STRIPE_SECRET_KEY, {
 const createCheckoutSession = async (customerID, price) => {
   const session = await Stripe.checkout.sessions.create({
     mode: 'subscription',
+    allow_promotion_codes: true,
     customer: customerID,
     line_items: [
       {

@@ -11,11 +11,10 @@ getBrainstormOpenaiResponse = async function (req, res) {
             // prompt: prompt,
             prompt: req.prompt,
             max_tokens: 1500,
-            temperature: 0.9,
+            temperature: 0.7,
         });
 
         let temp = resp.data
-    
             //updating tokens from "subscription" document
             await updateTokensUsed(req,res,temp)
             // const subs = await Subscription.findOne({"uid":req.uid})

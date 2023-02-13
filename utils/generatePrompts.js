@@ -1,12 +1,6 @@
 const { StatusCodes } = require("http-status-codes")
 const CONSTANTS = require("../utils/utils")
-const getRegeneratePrompt = (req,res)=>{
-    let {  campaign_description,tones,num_posts,goal,product_name,product_description,benefits,instagram,
-        facebook, twitter,linkedin,length} = req.body
 
-        let prompt = "prompt"
-
-}
 const getCreatePrompt = (req,res)=>{
     let {  campaign_description,tones,num_posts,goal,product_name,product_description,benefits,platform,length} = req.body
 
@@ -110,6 +104,58 @@ const getCreatePrompt = (req,res)=>{
             data:null
         })
     }
+
+}
+
+
+const getRegeneratePrompt = (req,res)=>{
+    let {platform, post} = req.body
+    if(!post||!platform){
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            errors:[{
+                msg:"Required parameter missing"
+            }],
+            data:null
+        })
+    }
+    try{
+        let promptV1 = "rewrite the below "
+        
+
+            if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+                return res.json({
+                    errors:[{
+                        msg:`unsupported platform ${platform}`
+                    }],
+                    data:null
+                })
+            }else{
+                    
+                if(platform!=CONSTANTS.TWITTER){
+                    promptV1 = promptV1+ platform+ " post\n post: "+post
+                }else{
+                    promptV1 = promptV1+ " tweet\ntweet: "+post
+                } 
+                    
+                    
+            }
+
+        let prompt  = promptV1
+        console.log("PROMPT ",prompt)
+            
+        return prompt
+    }catch(error){
+        console.log(error.stack)
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            errors:[
+                {
+                    msg:error.message
+                }
+            ],
+            data:null
+        })
+    }
+    
 
 }
 
