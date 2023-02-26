@@ -10,12 +10,13 @@ getBrainstormOpenaiResponse = async function (req, res) {
             model: CONSTANTS.MODEL_DAVINCI,
             // prompt: prompt,
             prompt: req.prompt,
-            max_tokens: 1500,
+            max_tokens: 300,
             temperature: 0.7,
         });
 
         let temp = resp.data
             //updating tokens from "subscription" document
+            console.log("OPENAI RESPONSE ", temp)
             await updateTokensUsed(req,res,temp)
             // const subs = await Subscription.findOne({"uid":req.uid})
             // let finalTokens = Number(subs.tokens_left)-Number(temp.usage.total_tokens)

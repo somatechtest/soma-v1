@@ -217,6 +217,10 @@ async function tokenQuickPostMiddleware(req,res,next){
         console.log("NO PLAN IS ACTIVE SERVING UNDER FREE PLAN")
     }
 
+    if(num_posts>3){
+        //TODO: CALL API MULTIPLE TIMES
+    }
+
     //fetching more details aout the "plan"
     let planDetails = await Plan.findOne({"plan":userPlan})
     console.log("PLAN ", userPlan)

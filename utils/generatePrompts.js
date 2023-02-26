@@ -160,8 +160,8 @@ const getRegeneratePrompt = (req,res)=>{
 }
 
 const getCreateQuickPostPrompt = (req,res)=>{
-    let {  tone,goal,product_name,product_description,platforms,include_image,include_hashtags,length} = req.body
-    if(!tone||!goal||!product_name||!product_description||!platforms||include_image==null||include_hashtags==null||!length){
+    let {  tone,goal,product_name,product_description,platform,num_posts,include_image,include_hashtags,length} = req.body
+    if(!tone||!goal||!product_name||!product_description||!num_posts||!platform||include_image==null||include_hashtags==null||!length){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
                 msg:"Required parameter missing"
@@ -172,40 +172,31 @@ const getCreateQuickPostPrompt = (req,res)=>{
     try{
         let promptV1 = "write "
         let platformTone = ""
-        for(let i=0;i<platforms.length;i++){
-            let platform = platforms[i]
-            if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
-                return res.json({
-                    errors:[{
-                        msg:`unsupported platform ${platform}`
-                    }],
-                    data:null
-                })
+        if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+            return res.json({
+                errors:[{
+                    msg:`unsupported platform ${platform}`
+                }],
+                data:null
+            })
+            }else{
+               
+                if(platform!=CONSTANTS.TWITTER){
+                    platformTone = platformTone+num_posts+" lengthy "+tone+" "+platform+" post, "
                 }else{
-                    if(i==platforms.length-1){
-                        if(platform!=CONSTANTS.TWITTER){
-                            platformTone = platformTone+ " and 1 lengthy "+tone+" "+platform+" post, "
-                        }else{
-                            platformTone = platformTone+ " and 1 lengthy "+tone+" "+" tweet, "
-                        } 
-                    }else{
-                        if(platform!=CONSTANTS.TWITTER){
-                            platformTone = platformTone+ "1 lengthy "+tone+" "+platform+" post, "
-                        }else{
-                            platformTone = platformTone+ "1 lengthy "+tone+" "+" tweet, "
-                        } 
-                    }
-                    
-                }
-
-        }
+                    platformTone = platformTone+num_posts+" lengthy "+tone+" "+" tweet, "
+                } 
+                
+                
+            }
         
         promptV1 = promptV1+platformTone
         //adding goal
-        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
+//        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
+        promptV1 = promptV1+"to "+goal+" , for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
         promptV1 = promptV1+"product  name - "+product_name+" \n"
         promptV1 = promptV1+"product description - "+product_description+" \n"
-        promptV1 = promptV1+"\n "+platforms[0]+" : \n"
+        promptV1 = promptV1+"\n "+platform+" : \n"
 
         
         //checking for invalid tone
@@ -242,6 +233,94 @@ const getCreateQuickPostPrompt = (req,res)=>{
     
 
 }
+
+
+// PREVIOUS QUICKPOST CODE
+// const getCreateQuickPostPrompt = (req,res)=>{
+//     let {  tone,goal,product_name,product_description,platforms,num_posts,include_image,include_hashtags,length} = req.body
+//     if(!tone||!goal||!product_name||!product_description||!platforms||include_image==null||include_hashtags==null||!length){
+//         return res.status(StatusCodes.BAD_REQUEST).json({
+//             errors:[{
+//                 msg:"Required parameter missing"
+//             }],
+//             data:null
+//         })
+//     }
+//     try{
+//         let promptV1 = "write "
+//         let platformTone = ""
+//         for(let i=0;i<platforms.length;i++){
+//             let platform = platforms[i]
+//             if(!CONSTANTS.SUPPORTED_PLATFORMS.includes(platform.toLowerCase())){
+//                 return res.json({
+//                     errors:[{
+//                         msg:`unsupported platform ${platform}`
+//                     }],
+//                     data:null
+//                 })
+//                 }else{
+//                     if(i==platforms.length-1){
+//                         if(platform!=CONSTANTS.TWITTER){
+//                             platformTone = platformTone+ " and "+num_posts+" lengthy "+tone+" "+platform+" posts, "
+//                         }else{
+//                             platformTone = platformTone+ " and "+num_posts+" lengthy "+tone+" "+" tweet, "
+//                         } 
+//                     }else{
+//                         if(platform!=CONSTANTS.TWITTER){
+//                             platformTone = platformTone+num_posts+" lengthy "+tone+" "+platform+" post, "
+//                         }else{
+//                             platformTone = platformTone+num_posts+" lengthy "+tone+" "+" tweet, "
+//                         } 
+//                     }
+                    
+//                 }
+
+//         }
+        
+//         promptV1 = promptV1+platformTone
+//         //adding goal
+// //        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
+//         promptV1 = promptV1+"to "+goal+" , for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
+//         promptV1 = promptV1+"product  name - "+product_name+" \n"
+//         promptV1 = promptV1+"product description - "+product_description+" \n"
+//         promptV1 = promptV1+"\n "+platforms[0]+" : \n"
+
+        
+//         //checking for invalid tone
+//         //TODO: CHECK MAX DESC LENGTH
+        
+//         if(!CONSTANTS.SUPPORTED_TONES.includes(tone.toLowerCase())){
+//             return res.json({
+//                 errors:[
+//                     {
+//                         msg:`unsupported tone found ${tone}`
+//                     }
+//                 ],
+//                 data:null
+//             })
+//         }
+    
+        
+
+//         let prompt  = promptV1
+//         console.log("PROMPT ",prompt)
+            
+//         return prompt
+//     }catch(error){
+//         console.log(error.stack)
+//         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+//             errors:[
+//                 {
+//                     msg:error.message
+//                 }
+//             ],
+//             data:null
+//         })
+//     }
+    
+
+// }
+
 
 const getTranslatePrompt = (req,res)=>{
     let {  posts_array, language} = req.body

@@ -78,14 +78,14 @@ const calculateRegeneratePillsFunc =  (req,res)=>{
 
 
 const calculateCreateQuickPostPillsFunc =  (req,res)=>{
-    let {  tone,goal,product_name,product_description,platforms,include_image,include_hashtags,length} = req.body
-    let num_posts = 1
+    let {  tone,goal,product_name,product_description,platform,num_posts,include_image,include_hashtags,length} = req.body
+    
         
         //avg tone length is taken as 7
     let prompt = getCreateQuickPostPrompt(req,res)
     //openai cost per char
     let avgPostLenShort = 300 //chars
-    let avgPostLenOpt = 400
+    let avgPostLenOpt = 300
     let avgPostLenLong = 500 //chars
     let outLen = 0
     // if(length == CONSTANTS.LENGTH_SHORT){
@@ -99,7 +99,7 @@ const calculateCreateQuickPostPillsFunc =  (req,res)=>{
     // }
     outLen = avgPostLenOpt
     //calculating the tokens length for response currently 1.5 times reqd
-    outLen = Math.round(outLen*1.5)
+    outLen = Math.round(outLen*1.2)
     let output_tokens_length = Math.round(outLen/4)
 
     //input token len + output token len
