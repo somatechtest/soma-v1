@@ -205,7 +205,7 @@ async function tokenQuickPostMiddleware(req,res,next){
     if(!length || !num_posts){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
-                msg:"required parameter missing"
+                msg:"required parameter missing token middleware"
             }],
             data:null
         })

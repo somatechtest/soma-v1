@@ -74,7 +74,7 @@ async function planMiddleware(req,res,next){
     }
 
     if(subs.tokens_left<=0 && subs.top_up <=0){
-        return res.json({
+        return res.send(StatusCodes.FORBIDDEN).json({
             errors:[
                 {
                     msg:"No tokens left please consider upgrading plan or buying some tokens"
