@@ -15,28 +15,23 @@ const { translateCampaign } = require("../controllers/translateCampaign.controll
 const { createQuickPost } = require("../controllers/quickPost.controller");
 const { regeneratePost } = require("../controllers/regenerate.controller");
 
+// router.post('/init', authTokenVerifyMiddleware,planMiddleware, initCampaign)
+// router.post('/update_campaign_name', authTokenVerifyMiddleware, updateCampaignName)
+// router.post('/save_campaign', authTokenVerifyMiddleware, saveCampaign)
+// router.post('/delete_campaign', authTokenVerifyMiddleware, deleteCampaign) 
 
 
-// router.post('/save', authTokenVerifyMiddleware, planMiddleware, tokenMiddleware, async function (req, res) {
-//     //check if name exists
-// })
-router.post('/init', authTokenVerifyMiddleware,planMiddleware, initCampaign)
-router.post('/update_campaign_name', authTokenVerifyMiddleware, updateCampaignName)
-router.post('/save_campaign', authTokenVerifyMiddleware, saveCampaign)
-router.post('/delete_campaign', authTokenVerifyMiddleware, deleteCampaign) 
+// router.get('/get_campaign', authTokenVerifyMiddleware, getCampaign)
+// router.get('/get_draft_campaigns', authTokenVerifyMiddleware, getAllDraftCampaigns)
+// router.get('/get_completed_campaigns', authTokenVerifyMiddleware, getAllCompletedCampaigns)
 
-
-router.get('/get_campaign', authTokenVerifyMiddleware, getCampaign)
-router.get('/get_draft_campaigns', authTokenVerifyMiddleware, getAllDraftCampaigns)
-router.get('/get_completed_campaigns', authTokenVerifyMiddleware, getAllCompletedCampaigns)
-
-//TODO: ADD AUTH MIDDLEWARE BELOW  middleware.authTokenVerifyMiddleware,
-router.post('/create', authTokenVerifyMiddleware, planMiddleware, tokenMiddleware, createCampaign)
+// //TODO: ADD AUTH MIDDLEWARE BELOW  middleware.authTokenVerifyMiddleware,
+// router.post('/create', authTokenVerifyMiddleware, planMiddleware, tokenMiddleware, createCampaign)
 router.post('/quick_post', authTokenVerifyMiddleware, planMiddleware, tokenQuickPostMiddleware, createQuickPost)
 router.post('/regenerate', authTokenVerifyMiddleware, planMiddleware, tokenRegenerateMiddleware, regeneratePost)
 
 //TODO: DOUBLE CHECK IF CALCULATE PILLS ROUTER IS NEEDED?
-router.get('/pill_calculator', calculatePills)
+// router.get('/pill_calculator', calculatePills)
 //TODO: ADD AUTH MIDDLEWARE BELOW  middleware.authTokenVerifyMiddleware,
 router.post('/translate',  authTokenVerifyMiddleware, planMiddleware, tokenTranslateMiddleware, translateCampaign )
 

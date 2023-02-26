@@ -53,7 +53,7 @@ app.use("/api/v1/payment", payRouter);
 app.use("/api/v1/campaign", campaignRouter);
 //TODO: REMOVE ADMIN ROUTE IF NOT REQUIRED
 app.use("/api/v1/admin", adminRouter);
-app.use("/api/v1/", brainstormRouter);
+// app.use("/api/v1/", brainstormRouter);
 
 //send welcome mail
 // app.use("/api/v1/send", handleSendEmail);
