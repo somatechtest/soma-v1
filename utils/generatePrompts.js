@@ -196,7 +196,7 @@ const getCreateQuickPostPrompt = (req,res)=>{
         promptV1 = promptV1+"to "+goal+" , for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
         promptV1 = promptV1+"product  name - "+product_name+" \n"
         promptV1 = promptV1+"product description - "+product_description+" \n"
-        promptV1 = promptV1+"\n "+platform+" : \n"
+        promptV1 = promptV1+"\n "+" 1)"
 
         
         //checking for invalid tone
