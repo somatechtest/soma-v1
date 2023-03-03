@@ -193,7 +193,7 @@ const getCreateQuickPostPrompt = (req,res)=>{
         promptV1 = promptV1+platformTone
         //adding goal
 //        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
-        promptV1 = promptV1+"to "+goal+" , for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis, at end of each post provide keywords to search images for that post from the internet as $k$ \n"
+        promptV1 = promptV1+"to "+goal+" , for the below product, include different emojis in the post\n"
         promptV1 = promptV1+"product name - "+product_name+" \n"
         promptV1 = promptV1+"product description - "+product_description+" \n"
         promptV1 = promptV1+"\n "+" 1)"

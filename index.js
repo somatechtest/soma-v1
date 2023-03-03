@@ -19,6 +19,7 @@ const adminRouter = require("./routes/admin.routes")
 const brainstormRouter = require("./routes/brainstorm.routes")
 var admin = require("firebase-admin");
 const { handleSendEmail } = require("./controllers/user.controller");
+const { openai } = require("./connect/openai");
 // var serviceAccount = require("./firebasecreds.json");
 
 var serviceAccount = 
@@ -61,6 +62,17 @@ app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/_health/",(req,res)=>{
   res.status(StatusCodes.OK).json({
     data:"OK"
+  })
+})
+app.use("/api/v1/_test/",async(req,res)=>{
+  
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [{role: "user", content: "Hello world"}],
+  });
+  console.log(completion.data.choices[0].message);
+  res.status(StatusCodes.OK).json({
+    data:completion.data.choices[0].message.content
   })
 })
 

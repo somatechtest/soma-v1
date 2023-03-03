@@ -19,8 +19,6 @@ const { regeneratePost } = require("../controllers/regenerate.controller");
 // router.post('/update_campaign_name', authTokenVerifyMiddleware, updateCampaignName)
 // router.post('/save_campaign', authTokenVerifyMiddleware, saveCampaign)
 // router.post('/delete_campaign', authTokenVerifyMiddleware, deleteCampaign) 
-
-
 // router.get('/get_campaign', authTokenVerifyMiddleware, getCampaign)
 // router.get('/get_draft_campaigns', authTokenVerifyMiddleware, getAllDraftCampaigns)
 // router.get('/get_completed_campaigns', authTokenVerifyMiddleware, getAllCompletedCampaigns)

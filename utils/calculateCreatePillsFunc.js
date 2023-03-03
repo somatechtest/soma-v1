@@ -81,11 +81,15 @@ const calculateCreateQuickPostPillsFunc =  (req,res)=>{
     let {  tone,goal,product_name,product_description,platform,num_posts,include_image,include_hashtags,length} = req.body
     
         
+    req.include_image = include_image
         //avg tone length is taken as 7
     let prompt = getCreateQuickPostPrompt(req,res)
     //openai cost per char
     let avgPostLenShort = 300 //chars
-    let avgPostLenOpt = 300
+    let avgPostLenOpt = 500
+    if(platform==CONSTANTS.TWITTER){
+        avgPostLenOpt = 300
+    }
     let avgPostLenLong = 500 //chars
     let outLen = 0
     // if(length == CONSTANTS.LENGTH_SHORT){
@@ -98,9 +102,15 @@ const calculateCreateQuickPostPillsFunc =  (req,res)=>{
     //     outLen = avgPostLenLong*num_posts
     // }
     outLen = avgPostLenOpt
+    outLen = outLen*num_posts
     //calculating the tokens length for response currently 1.5 times reqd
     outLen = Math.round(outLen*1.2)
-    let output_tokens_length = Math.round(outLen/4)
+    let output_tokens_length
+    output_tokens_length= Math.round(outLen/4)
+    if(include_image){
+        output_tokens_length= output_tokens_length*2
+    }
+     
 
     //input token len + output token len
     let strlen = (prompt.length+(tone.length*7))

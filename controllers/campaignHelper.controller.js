@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
+const { openai } = require("../connect/openai");
 const Campaign = require("../models/campaign.model");
 const initCampaign = async (req, res) => {
     //check if name exists
@@ -343,7 +344,9 @@ const updateTokensUsed = async(req,res,temp)=>{
                 const subs = req.subscription_model
                 let planTokensLeft = subs.tokens_left
                 let topupTokensLeft = subs.top_up
-                let tokensUsed = temp.usage.total_tokens;
+                //Not considering prompt tokens, only completion tokens considered
+                let tokensUsed = temp.usage.completion_tokens;
+                
     
                 console.log("Updatig tokens ....")
                 console.log("planTokensLeft ",planTokensLeft)
@@ -373,17 +376,47 @@ const updateTokensUsed = async(req,res,temp)=>{
                 subs.top_up = topupTokensLeft
                 let updatedSubs;
                 
-                    updatedSubs = await subs.save()
+                updatedSubs = await subs.save()
                 
                     
             
                 console.log("topupTokensLeft ",topupTokensLeft)
+                
+                const regex = /[\d]+\)|\(|\)/g;
+
+                const arr = temp.choices[0].message.content.split(regex).filter(Boolean);
+                arr.forEach((element, index) => {
+                    arr[index] = element.trim();
+                    if (arr[index] === "") {
+                        arr.splice(index, 1); // remove the element at index
+                      }
+                  });
+                  let keyArr;
+                //TWICE TOKENS WILL BE USED IF IMAGES ARE NEEDED
+                if(req.include_image){
+                    tokensUsed=tokensUsed*2
+                    //CALLING OPENAI TO FETCH IMAGES
+                    const resp = await openai.createChatCompletion({
+                        model: "gpt-3.5-turbo",
+                        messages: [{role: "user", content: "generate keywords for below posts to search images from the unsplash \n Posts 1)"+temp.choices[0].message.content}],
+                    });
+                    //console.log(resp.data.choices[0].message);
+                    keyArr = resp.data.choices[0].message.content.split(regex).filter(Boolean);
+                    keyArr.forEach((element, index) => {
+                        keyArr[index] = element.trim();
+                        if (keyArr[index] === "") {
+                            keyArr.splice(index, 1); // remove the element at index
+                        }
+                    });
+                }
+                
                 return res.status(StatusCodes.OK).json({
                     errors:null,
                     data:{
-                        response: temp.choices[0].text,
+                        response: arr,
+                        keywords: keyArr,
                         finish_reason: temp.choices[0].finish_reason,
-                        total_tokens_used: tokensUsed,
+                        tokens_used_for_output: tokensUsed,
                         plan_tokens_left: planTokensLeft,
                         topup_tokens_left: topupTokensLeft
                     }

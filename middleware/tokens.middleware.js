@@ -12,6 +12,8 @@ const { StatusCodes } = require("http-status-codes");
  */
 
 function compareTokens(req,res,input_tokens_length,output_tokens_length){
+    console.log("INP TOKENS REQ ESTD",input_tokens_length)
+    console.log("OUT TOKENS REQ ESTD",output_tokens_length)
     try{
     let subsModel = req.subscription_model
     if(subsModel.tokens_left>=input_tokens_length+output_tokens_length){
