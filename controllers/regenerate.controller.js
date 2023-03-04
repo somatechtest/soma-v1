@@ -14,13 +14,19 @@ const regeneratePost = async function (req, res) {
     
     let resp;
     try{
-        resp = await openai.openai.createCompletion({
-            model: CONSTANTS.MODEL_DAVINCI,
-            // prompt: prompt,
-            prompt: req.prompt,
-            // max_tokens: req.output_tokens_length,
-            max_tokens: 1500,
-            temperature: 0.9,
+        // resp = await openai.openai.createCompletion({
+        //     model: CONSTANTS.MODEL_DAVINCI,
+        //     // prompt: prompt,
+        //     prompt: req.prompt,
+        //     // max_tokens: req.output_tokens_length,
+        //     max_tokens: 1500,
+        //     temperature: 0.9,
+        // });
+        // let temp = resp.data
+
+        const resp = await openai.openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{role: "user", content: req.prompt}],
         });
         let temp = resp.data
     

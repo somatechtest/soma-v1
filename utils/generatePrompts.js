@@ -140,7 +140,7 @@ const getRegeneratePrompt = (req,res)=>{
                     
             }
 
-        let prompt  = promptV1
+        let prompt  = promptV1+'\n Rewritten: \n'
         console.log("PROMPT ",prompt)
             
         return prompt
@@ -323,7 +323,7 @@ const getCreateQuickPostPrompt = (req,res)=>{
 
 
 const getTranslatePrompt = (req,res)=>{
-    let {  posts_array, language} = req.body
+    let {  posts_array, language, platform} = req.body
     if(!posts_array|| !language){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
@@ -338,7 +338,13 @@ const getTranslatePrompt = (req,res)=>{
             text = text+i+")"+posts_array[i-1]+" \n"
             
         }
-        let prompt = `Translate these into ${language} ${text}`
+        let prompt
+        if(platform == CONSTANTS.TWITTER){
+            prompt = `Translate below tweets into ${language} ${text}`
+        }else{
+            prompt = `Translate below ${platform} posts into ${language} ${text}`
+        }
+        
         console.log("TRANSLATE ",prompt)
         return prompt
         

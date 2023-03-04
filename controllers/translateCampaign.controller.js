@@ -41,17 +41,12 @@ const translateCampaign = async (req, res) =>{
     
         let resp;
         try{
-            resp = await openai.createCompletion({
-                model: CONSTANTS.MODEL_CURIE,
-                prompt: prompt,
-                temperature: 0.3,
-                max_tokens: req.output_tokens_length,
-                top_p: 1.0,
-                frequency_penalty: 0.0,
-                presence_penalty: 0.0,
-                });
-                let temp = resp.data
-                await updateTokensUsed(req,res,temp)
+            const resp = await openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: [{role: "user", content: req.prompt}],
+            });
+            let temp = resp.data
+            await updateTokensUsed(req,res,temp)
         }catch(error){
             console.log(error.stack)
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

@@ -60,7 +60,7 @@ const calculateRegeneratePillsFunc =  (req,res)=>{
     // if(length == CONSTANTS.LENGTH_LONG){
     //     outLen = avgPostLenLong*num_posts
     // }
-    outLen = avgPostLenOpt
+    outLen = post.length
     //calculating the tokens length for response currently 1.5 times reqd
     outLen = Math.round(outLen*1.5)
     let output_tokens_length = Math.round(outLen/4)
