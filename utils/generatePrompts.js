@@ -161,6 +161,8 @@ const getRegeneratePrompt = (req,res)=>{
 
 const getCreateQuickPostPrompt = (req,res)=>{
     let {  tone,goal,product_name,product_description,platform,num_posts,include_image,include_hashtags,length} = req.body
+    //optionals
+    let {context, target_audience, keywords, benefits} = req.body
     if(!tone||!goal||!product_name||!product_description||!num_posts||!platform||include_image==null||include_hashtags==null||!length){
         return res.status(StatusCodes.BAD_REQUEST).json({
             errors:[{
@@ -179,29 +181,13 @@ const getCreateQuickPostPrompt = (req,res)=>{
                 }],
                 data:null
             })
+        }else{
+            if(platform!=CONSTANTS.TWITTER){
+                platformTone = platformTone+num_posts+" lengthy "+tone+" "+platform+" posts, "
             }else{
-               
-                if(platform!=CONSTANTS.TWITTER){
-                    platformTone = platformTone+num_posts+" lengthy "+tone+" "+platform+" posts, "
-                }else{
-                    platformTone = platformTone+num_posts+" lengthy "+tone+" "+" tweets, "
-                } 
-                
-                
-            }
-        
-        promptV1 = promptV1+platformTone
-        //adding goal
-//        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
-        promptV1 = promptV1+"to "+goal+" , for the below product, include different emojis in the post\n"
-        promptV1 = promptV1+"product name - "+product_name+" \n"
-        promptV1 = promptV1+"product description - "+product_description+" \n"
-        promptV1 = promptV1+"\n "+" 1)"
-
-        
-        //checking for invalid tone
-        //TODO: CHECK MAX DESC LENGTH
-        
+                platformTone = platformTone+num_posts+" lengthy "+tone+" "+" tweets, "
+            } 
+        }
         if(!CONSTANTS.SUPPORTED_TONES.includes(tone.toLowerCase())){
             return res.json({
                 errors:[
@@ -212,6 +198,34 @@ const getCreateQuickPostPrompt = (req,res)=>{
                 data:null
             })
         }
+        
+        promptV1 = promptV1+platformTone
+        //adding goal
+//        promptV1 = promptV1+"to "+goal+" ,with each post of atleast 400 characters long for the below product. do not give same responses for all posts, be as "+tone+" as possible , include different emojis. \n"
+        promptV1 = promptV1+"to "+goal+" , for the below product, include different emojis in the post\n"
+        promptV1 = promptV1+"product name - "+product_name+" \n"
+        promptV1 = promptV1+"product description - "+product_description+" \n"
+        if(context){
+            promptV1 = promptV1+"use this as context to write - "+context+" \n"
+        }
+        if(target_audience){
+            promptV1 = promptV1+"target audience - "+target_audience+" \n"
+        }
+        if(benefits){
+            promptV1 = promptV1+"benefits of product - "+benefits+" \n"
+        }
+        if(keywords){
+            promptV1 = promptV1+"include these keywords in the posts \n keywords - "+keywords+" \n"
+        }
+
+
+        promptV1 = promptV1+"\n Posts : "+" 1)"
+
+        
+        //checking for invalid tone
+        //TODO: CHECK MAX DESC LENGTH
+        
+       
     
         
 

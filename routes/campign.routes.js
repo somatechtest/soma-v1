@@ -35,9 +35,6 @@ router.post('/translate',  authTokenVerifyMiddleware, planMiddleware, tokenTrans
 
 module.exports = router;
 
-
-
-
 /***
  * /create body
  * {   
@@ -48,7 +45,7 @@ module.exports = router;
   "goal":"capaign goal",
   "product_name":"Cocacola",
   "product_description":"This is sweet and cold soft drink",
-  "benefits":"benefits",
+  "benefits":"benefits",        
   "length":"short",
   "platform":"twitter"
 }

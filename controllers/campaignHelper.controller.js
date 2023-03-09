@@ -398,7 +398,7 @@ const updateTokensUsed = async(req,res,temp)=>{
                     //CALLING OPENAI TO FETCH IMAGES
                     const resp = await openai.createChatCompletion({
                         model: "gpt-3.5-turbo",
-                        messages: [{role: "user", content: "generate keywords for below posts to search images from the unsplash \n Posts 1)"+temp.choices[0].message.content}],
+                        messages: [{role: "user", content: "generate keywords for below posts to search images from the unsplash \n Posts 1)"+temp.choices[0].message.content+" \nPosts: 1)"}],
                     });
                     //console.log(resp.data.choices[0].message);
                     keyArr = resp.data.choices[0].message.content.split(regex).filter(Boolean);
