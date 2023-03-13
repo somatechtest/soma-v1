@@ -239,7 +239,7 @@ const getSubscription = async (req, res) => {
       return res.status(StatusCodes.OK).json({
         errors:null,
         data:{
-          "session url":session.url
+          "session_url":session.url
         }
       })
     }catch(error){
