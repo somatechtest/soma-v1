@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 //s_cid: "stripe customer id"
 var subscriptionSchema = new mongoose.Schema({
   tokens_left:{type:Number, required:true},
-  uid:{type:String,required:true, index:true},
+  uid:{type:String,required:true, index:true, unique:true},
   end_date: { type: Date, default: null },
   status:{type:String, default: "none"},
   top_up:{type:Number, default:0},

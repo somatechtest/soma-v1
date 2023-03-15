@@ -1,0 +1,6 @@
+{
+    "name": "Jaquet Droz Art Mineral Watch",
+    "description": "This exquisite watch from Jaquet Droz features a stunning mineral dial that is a true work of art. The dial is made from a unique mineral composition that creates a mesmerizing visual effect, which is further enhanced by the intricate details of the watch's hands and markers. The watch is crafted from the finest materials and features Jaquet Droz's signature attention to detail, making it a true masterpiece of watchmaking.",
+    "image": "https://www.jaquet-droz.com/sites/default/files/styles/news_detail/public/2019-12/04_J015534603.jpg?itok=55k4zGgB",
+    "attributes": [        {            "trait_type": "Brand",            "value": "Jaquet Droz"        },        {            "trait_type": "Model",            "value": "Art Mineral Watch"        },        {            "trait_type": "Material",            "value": "Mineral Dial"        },        {            "trait_type": "Movement",            "value": "Automatic"        },        {            "trait_type": "Water Resistance",            "value": "30 meters"        },        {            "trait_type": "Limited Edition",            "value": "Yes"        },        {            "trait_type": "Edition Size",            "value": "100"        }    ]
+}
