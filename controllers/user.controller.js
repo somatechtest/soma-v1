@@ -64,14 +64,23 @@ function handleSendEmail(name, email) {
 
 async function createUserAndSubscriptionInDB(req,res,_name,_email,_uid,_s_cid,_emialVerified,_plan,_tokensLeft,_endDate){
     try{
-        
-        let user = await User.create({
-            name:_name,
-            email:_email,
-            uid:_uid,
-            s_cid:_s_cid,
-            verified:_emialVerified
-        })
+        let user
+        if(_s_cid!=null){
+             user = await User.create({
+                name:_name,
+                email:_email,
+                uid:_uid,
+                s_cid:_s_cid,
+                verified:_emialVerified
+            })
+        }else{
+            user = await User.create({
+                name:_name,
+                email:_email,
+                uid:_uid,
+                verified:_emialVerified
+            })
+        }
         let userSubs = await Subscription.create({
             tokens_left: _tokensLeft, uid: _uid, end_date: _endDate,plan:_plan
         })
