@@ -29,6 +29,7 @@ const createQuickPost = async function (req, res) {
         //     temperature: 0.9,
         // });
         let temp = resp.data
+        console.log("TEMP ", temp)
     
             //updating tokens from "subscription" document
             await updateTokensUsed(req,res,temp)

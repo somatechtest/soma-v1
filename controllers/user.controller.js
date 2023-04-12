@@ -121,6 +121,7 @@ async function createUserAndSubscriptionInDB(req,res,_name,_email,_uid,_s_cid,_e
 
 // call when login with google and normal login
 async function loginUser(req,res){
+    console.log("LOGGING IN")
     let mail = req.email;
     let uid = req.uid
     let emailVerified = req.isVerified
@@ -300,6 +301,7 @@ async function loginUser(req,res){
 
 //called while signing up using email and pwd, creates plan as none 
 async function signUpUser(req,res){
+    console.log("SIGNING UP")
     let mail = req.email;
     let uid = req.uid
     let emailVerified = req.isVerified

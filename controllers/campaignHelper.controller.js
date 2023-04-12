@@ -340,6 +340,8 @@ const getAllCompletedCampaigns = async(req,res)=>{
  */
 
 const updateTokensUsed = async(req,res,temp)=>{
+
+    
             try{
                 const subs = req.subscription_model
                 let planTokensLeft = subs.tokens_left
